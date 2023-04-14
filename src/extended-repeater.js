@@ -17,39 +17,19 @@ const { NotImplementedError } = require('../extensions/index.js');
  */
 function repeater(str, options) {
   let result = '';
-  let repeatedStr = '';
   str = String(str);
 
-  if (!options.repeatTimes) {
-    options.repeatTimes = 1;
-  }
+  let repeatTimes = !options.repeatTimes ? 1 : options.repeatTimes;
+  let separator = !options.separator ? '+' : options.separator;
+  let addition = options.addition === undefined ? '' : String(options.addition);
+  let additionRepeatTimes = !options.additionRepeatTimes ? 1 : options.additionRepeatTimes;
+  let additionSeparator = !options.additionSeparator ? '|' : options.additionSeparator;
 
-  if (!options.separator) {
-    options.separator = '+';
-  }
+  let additionStr = str + (addition + additionSeparator).repeat(additionRepeatTimes);
+  additionStr = additionStr.slice(0, additionStr.length - additionSeparator.length) + separator;
 
-  if (options.addition === undefined) {
-    options.addition = '';
-  } else {
-    options.addition = String(options.addition);
-  }
-
-  if (!options.additionRepeatTimes) {
-    options.additionRepeatTimes = 1;
-  }
-
-  if (!options.additionSeparator) {
-    options.additionSeparator = '|';
-  }
-
-  let additionStr = str + (options.addition + options.additionSeparator).repeat(options.additionRepeatTimes);
-  additionStr = additionStr.slice(0, additionStr.length - options.additionSeparator.length) + options.separator;
-
-  for (let i = 0; i < options.repeatTimes; i++) {
-    repeatedStr += additionStr;
-  }
-  
-  result = repeatedStr.slice(0, repeatedStr.length - options.separator.length);
+  let repeatedStr = additionStr.repeat(repeatTimes);
+  result = repeatedStr.slice(0, repeatedStr.length - separator.length);
 
   return result;
 }
