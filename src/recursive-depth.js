@@ -1,5 +1,3 @@
-const { NotImplementedError } = require('../extensions/index.js');
-
 /**
  * Implement class DepthCalculator with method calculateDepth
  * that calculates deoth of nested array
