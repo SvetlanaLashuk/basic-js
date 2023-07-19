@@ -20,13 +20,59 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  constructor(isDirect = true) {
+    this.isDirect = isDirect;
+    this.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  encrypt(message, key) {
+    if (!(message && key)) {
+      throw new Error('Incorrect arguments!');
+    }
+
+    const arrayAlphabet = this.alphabet.split('');
+    const keyArray = key.toUpperCase().split('');
+    const messageArray = message.toUpperCase().split('');
+    let keyIndex = 0;
+    let result = [];
+
+    for (let i = 0; i < messageArray.length; i++) {
+      if (arrayAlphabet.indexOf(messageArray[i]) !== -1) {
+        if (keyIndex > keyArray.length - 1) {
+          keyIndex = 0;
+        }
+        result.push(arrayAlphabet[(arrayAlphabet.indexOf(messageArray[i]) + arrayAlphabet.indexOf(keyArray[keyIndex % keyArray.length])) % 26]);
+        keyIndex++;
+      } else {
+        result.push(messageArray[i]);
+      }
+    }
+    return this.isDirect ? result.join('') : result.reverse().join('');
+  }
+
+  decrypt(encryptedMessage, key) {
+    if (!(encryptedMessage && key)) {
+      throw new Error('Incorrect arguments!');
+    }
+    
+    const arrayAlphabet = this.alphabet.split('');
+    const keyArray = key.toUpperCase().split('');
+    const messageArray = encryptedMessage.toUpperCase().split('');
+    let keyIndex = 0;
+    let result = [];
+
+    for (let i = 0; i < messageArray.length; i++) {
+      if (arrayAlphabet.indexOf(messageArray[i]) !== -1) {
+        if (keyIndex > keyArray.length - 1) {
+          keyIndex = 0;
+        }
+        result.push(arrayAlphabet[(arrayAlphabet.indexOf(messageArray[i]) - arrayAlphabet.indexOf(keyArray[keyIndex % keyArray.length]) + 26) % 26]);
+        keyIndex++;
+      } else {
+        result.push(messageArray[i]);
+      }
+    }
+    return this.isDirect ? result.join('') : result.reverse().join('');
   }
 }
 
